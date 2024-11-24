@@ -1,4 +1,4 @@
-# Cross-cluster Weighted Forests
+# Cross-Cluster Weighted Forests
 
 A Python implementation of Cross-cluster Weighted Forests for ensemble learning across multiple data clusters.
 
