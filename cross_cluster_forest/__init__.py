@@ -1,5 +1,5 @@
 """
-Cross-cluster Weighted Forests
+Cross-Cluster Weighted Forests
 
 A package implementing the Cross-Cluster Weighted Forests method
 for ensemble learning across multiple data clusters or studies.

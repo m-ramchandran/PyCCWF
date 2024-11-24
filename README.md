@@ -6,18 +6,19 @@ A Python implementation of Cross-cluster Weighted Forests for ensemble learning 
 
 ```bash
 git clone https://github.com/m-ramchandran/PyCCWF.git
-cd PyCCWF
+cd cross_cluster_forest
 pip install -e .
 ```
 
 ## Quick Start
 
 ### Running the Example
+
 ```python
 from cross_cluster_forest import CrossClusterForest, sim_data, evaluate_model
 
 # Generate example data
-data = sim_data(nclusters=15, ncoef=20, ntest=5, 
+data = sim_data(nclusters=15, ncoef=20, ntest=5,
                 multimodal=True, n_samples=200, clustszind=2)
 clusters_list = data['clusters_list']
 
@@ -27,18 +28,18 @@ test_clusters = clusters_list[-5:]
 
 # Initialize and fit model
 model = CrossClusterForest(
-    ntree=100,          # trees for cluster models
-    merged_ntree=500,   # trees for merged model
-    outcome_col='y',    # name of target variable
-    k=10,              # number of clusters
-    cluster_ind=1       # use k-means clustering
+  ntree=100,  # trees for cluster models
+  merged_ntree=500,  # trees for merged model
+  outcome_col='y',  # name of target variable
+  k=10,  # number of clusters
+  cluster_ind=1  # use k-means clustering
 )
 
 # Fit the model
 model.fit(train_clusters, ncoef=20)
 
 # Evaluate
-improvements = evaluate_model(model, train_clusters, test_clusters, ncoef=20)
+eval_mod = evaluate_model(model, train_clusters, test_clusters, ncoef=20)
 ```
 
 ### Using Your Own Data - Pre-clustered Version
@@ -46,6 +47,7 @@ If you have multiple pre-existing clusters (e.g., multiple studies or datasets):
 In this case, there is the option to use k-means to create new clusters from the concatenated inputted training clusters (cluster_ind = 1), or just use the pre-existing clusters (cluster_ind = 0)
 ```python
 # Prepare your clusters
+import pandas as pd
 clusters = [
     pd.DataFrame(...),  # Cluster 1
     pd.DataFrame(...),  # Cluster 2
@@ -80,10 +82,10 @@ from cross_cluster_forest import SingleDatasetForest
 
 # Initialize
 model = SingleDatasetForest(
-    ntree=100,
-    merged_ntree=500,
-    outcome_col='target_column_name',
-    k=10  # number of clusters
+  ntree=100,
+  merged_ntree=500,
+  outcome_col='target_column_name',
+  k=10  # number of clusters
 )
 
 # Fit (two options):
