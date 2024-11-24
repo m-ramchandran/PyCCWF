@@ -28,7 +28,7 @@ def plot_results(improvements):
 
     plt.axhline(y=0, color='black', linestyle='-', alpha=0.3)
     plt.xticks(range(len(methods)), methods, rotation=45, ha='right')
-    plt.ylabel('Relative Improvement (%)')
+    plt.ylabel('% change in RMSE from baseline RF')
     plt.title('Performance Comparison of Different Methods')
 
     legend_elements = [

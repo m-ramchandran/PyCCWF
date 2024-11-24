@@ -19,6 +19,5 @@ cross_cluster_forest/utils/metrics.py
 cross_cluster_forest/visualization/__init__.py
 cross_cluster_forest/visualization/plots.py
 examples/__init__.py
-examples/claude_test.py
 examples/simulation_example.py
 examples/single_dataset_example.py
