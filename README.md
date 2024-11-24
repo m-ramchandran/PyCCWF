@@ -135,7 +135,12 @@ interpret_results(improvements)
 ## Citation
 
 If you use this package, please cite:
-[Your paper citation here]
+@article{ramchandran2021cross,
+  title={Cross-cluster weighted forests},
+  author={Ramchandran, Maya and Mukherjee, Rajarshi and Parmigiani, Giovanni},
+  journal={arXiv preprint arXiv:2105.07610},
+  year={2024}
+}
 
 ## License
 
