@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.cluster import KMeans
 
 
-def create_clusters(clusters_list, ntest, ncoef, k):
+def create_clusters(clusters_list, ntest, k):
     """
     Create clusters using K-means clustering.
 
@@ -13,8 +13,6 @@ def create_clusters(clusters_list, ntest, ncoef, k):
         List of all cluster data
     ntest : int
         Number of test clusters to keep separate
-    ncoef : int
-        Number of coefficients/features
     k : int
         Number of clusters for k-means
 
@@ -44,9 +42,6 @@ def create_clusters(clusters_list, ntest, ncoef, k):
     kmeans = KMeans(n_clusters=k, n_init=25)
     cluster_labels = kmeans.fit_predict(merged.drop('y', axis=1, errors='ignore'))
 
-    #print(f"Unique cluster labels: {np.unique(cluster_labels)}")
-    #print(f"Cluster sizes: {np.bincount(cluster_labels)}")
-
     # Split into clusters
     new_clusters_list = []
     for i in sorted(np.unique(cluster_labels)):
@@ -56,12 +51,11 @@ def create_clusters(clusters_list, ntest, ncoef, k):
 
     print(f"Number of clusters after size filtering: {len(new_clusters_list)}")
     print(f"Sizes of retained clusters: {[len(c) for c in new_clusters_list]}")
-
+    print(f"Total sample size after clustering: {sum([len(c) for c in new_clusters_list])}")
     # Add test studies if any
     if ntest > 0:
         new_clusters_list.extend(clusters_list[-ntest:])
 
-    #print(f"Final number of clusters (including test): {len(new_clusters_list)}")
-    print(f"Final cluster sizes: {[len(c) for c in new_clusters_list]}")
+    print(f"Final cluster sizes after adding optional test clusters: {[len(c) for c in new_clusters_list]}")
 
     return {'clusters_list': new_clusters_list}

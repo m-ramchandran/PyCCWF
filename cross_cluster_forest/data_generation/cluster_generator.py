@@ -1,5 +1,3 @@
-# cross_cluster_forest/data_generation/cluster_generator.py
-
 import numpy as np
 from scipy.stats import ortho_group, multivariate_normal, chi2
 from scipy.spatial.distance import mahalanobis
@@ -8,7 +6,7 @@ from sklearn.preprocessing import StandardScaler
 
 
 class AdvancedClusterGenerator:
-    """Advanced cluster generator with full R genRandomClust functionality"""
+    """Advanced cluster generator that mimics R package genRandomClust functionality"""
 
     def __init__(self, cov_method="eigen"):
         """
@@ -182,14 +180,14 @@ class AdvancedClusterGenerator:
             warnings.warn(
                 f"Requested separation {separation} might be unrealistic in "
                 f"{num_features} dimensions. Consider reducing separation or "
-                f"number of features. Adjusted separation: {adjusted_sep:.2f}"
+                f"increasing number of features. Adjusted separation: {adjusted_sep:.2f}"
             )
 
         return adjusted_sep
 
     def generate_outliers(self, n_outliers, n_features, data, labels):
         """
-        Generate sophisticated outliers using Mahalanobis distance.
+        Generate outliers using Mahalanobis distance.
 
         Parameters:
         -----------
@@ -340,11 +338,11 @@ class AdvancedClusterGenerator:
                           separation=0.8, num_noisy=0, range_var=(1, 10),
                           multimodal=True, num_modes=2):
         """
-        Generate clusters with full R-like functionality.
+        Generate clusters with full functionality.
 
         Parameters:
         -----------
-        [All parameters from original implementation with documentation]
+        [All parameters from original R genRandomClust implementation with documentation]
 
         Returns:
         --------

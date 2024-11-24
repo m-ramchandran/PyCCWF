@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="cross_cluster_forest",
+    name="PyCCWF",
     version="0.1.0",
     author="Maya Ramchandran",
     description="Implementation of Cross-cluster Weighted Forests",

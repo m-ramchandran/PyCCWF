@@ -73,6 +73,7 @@ def run_single_dataset_example():
         results[method] = rmse
         predictions_dict[method] = predictions
     predictions_df = pd.DataFrame.from_dict(predictions_dict)
+    performance_df = pd.DataFrame([results])
     # Calculate improvements
     baseline_rmse = results['merged']
 
@@ -86,9 +87,10 @@ def run_single_dataset_example():
     plot_results(improvements)
     interpret_results(improvements)
 
-    return model, improvements, predictions_df
+    return model, improvements, predictions_df, performance_df
 
 
 if __name__ == "__main__":
-    model, improvements, predictions = run_single_dataset_example()
-    print(predictions)
+    model, improvements, predictions, performance = run_single_dataset_example()
+    print("\nRMSE's per method")
+    print(performance)

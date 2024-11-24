@@ -1,15 +1,14 @@
-# cross_cluster_forest/models/forest.py
-
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import Ridge, Lasso
 from ..models.clustering import create_clusters
+from ..models.stacking import create_stacking_model
 
 
 class CrossClusterForest:
     """
-    Cross-cluster Weighted Forest implementation with key ensemble methods.
+    Cross-Cluster Weighted Forest implementation with key ensemble methods.
     """
 
     def __init__(self, ntree=100, merged_ntree=500, outcome_col='y', k=10, cluster_ind=1):
@@ -21,11 +20,11 @@ class CrossClusterForest:
         merged_ntree : int
             Number of trees in merged random forest (default 500)
         outcome_col : str
-            Name of outcome column
+            Name of outcome column (default 'y')
         k : int
             Number of clusters for k-means (used if cluster_ind=1)
         cluster_ind : int
-            Whether to use k-means clustering (1) or original clusters (0)
+            Whether to use k-means clustering (1) or original clusters/data partitions included in inputted cluster_list (0)
         """
         self.ntree = ntree
         self.merged_ntree = merged_ntree
@@ -39,7 +38,7 @@ class CrossClusterForest:
 
     def _create_base_model(self, data, is_merged=False):
         """
-        Create a random forest with R-like defaults
+        Create a random forest with R-like defaults; this performs better than scikit defaults
 
         Parameters:
         -----------
@@ -87,13 +86,10 @@ class CrossClusterForest:
 
         # Create clusters if needed
         if self.cluster_ind == 1:
-            if ncoef is None:
-                raise ValueError("ncoef must be specified when cluster_ind=1")
             # Create clusters with ntest=0 since we're only working with training data
             clusters_dict = create_clusters(
                 clusters_list=clusters_list,
                 ntest=0,
-                ncoef=ncoef,
                 k=self.k
             )
             clusters_list = clusters_dict['clusters_list']
@@ -108,7 +104,6 @@ class CrossClusterForest:
 
         # Fit individual cluster models
         self.cluster_models_ = []
-        mses = np.full((len(clusters_list), len(clusters_list)), np.nan)
         allpreds = [[] for _ in range(len(clusters_list))]
 
         # Train individual models
@@ -131,20 +126,14 @@ class CrossClusterForest:
                 else:
                     allpreds[i] = np.column_stack([allpreds[i], preds])
 
-                if i != j:
-                    mses[j, i] = np.mean(
-                        (preds - clusters_list[i][self.outcome_col]) ** 2
-                    )
 
         # Stack predictions
         predstack = np.vstack([pred for pred in allpreds])
         y_stack = np.concatenate([cluster[self.outcome_col] for cluster in clusters_list])
 
-        # Fit stacking models
-        self.stack_ridge_ = Ridge(positive=True)
+        self.stack_ridge_ = create_stacking_model(predstack, y_stack, method='ridge', intercept=True)
         self.stack_ridge_.fit(predstack, y_stack)
-
-        self.stack_lasso_ = Lasso(positive=True)
+        self.stack_lasso_ = create_stacking_model(predstack, y_stack, method='lasso', intercept=True)
         self.stack_lasso_.fit(predstack, y_stack)
 
         return self
@@ -189,7 +178,7 @@ class CrossClusterForest:
                 "'stack_ridge', 'stack_lasso'"
             )
 
-def evaluate_model(model, train_clusters, test_clusters, ncoef=None):
+def evaluate_model(model, test_clusters):
     """
     Evaluate model performance on test clusters.
 
@@ -215,18 +204,20 @@ def evaluate_model(model, train_clusters, test_clusters, ncoef=None):
     for test_data in test_clusters:
         for method in methods:
             preds = model.predict(test_data, method=method)
-            rmse = np.sqrt(np.mean((test_data[model.outcome_col] - preds) ** 2))
-            method_rmses[method].append(rmse)
             predictions_dict[method] = preds
+            if model.outcome_col in test_data.columns:
+                rmse = np.sqrt(np.mean((test_data[model.outcome_col] - preds) ** 2))
+                method_rmses[method].append(rmse)
 
     predictions_df = pd.DataFrame.from_dict(predictions_dict)
-    # Calculate improvements
-    merged_rmse = np.mean(method_rmses['merged'])
+    # Calculate improvements, if we have outcome information for the test set:
     improvements = {}
+    if model.outcome_col in test_data.columns:
+        merged_rmse = np.mean(method_rmses['merged'])
+        for method in methods:
+            method_rmse = np.mean(method_rmses[method])
+            imp = (method_rmse - merged_rmse) / merged_rmse * 100
+            improvements[method] = imp
+        method_rmses = pd.DataFrame.from_dict(method_rmses)
 
-    for method in methods:
-        method_rmse = np.mean(method_rmses[method])
-        imp = (method_rmse-merged_rmse) / merged_rmse * 100
-        improvements[method] = imp
-
-    return improvements, predictions_df
+    return {'predictions': predictions_df, 'improvements': improvements, 'performance': method_rmses}

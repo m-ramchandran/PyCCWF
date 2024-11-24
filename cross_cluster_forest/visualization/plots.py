@@ -32,8 +32,8 @@ def plot_results(improvements):
     plt.title('Performance Comparison of Different Methods')
 
     legend_elements = [
-        Patch(facecolor='gray', label='Baseline'),
-        Patch(facecolor='lightblue', label='Ensemble'),
+        Patch(facecolor='gray', label='Baseline RF'),
+        Patch(facecolor='lightblue', label='Naive Ensemble'),
         Patch(facecolor='purple', label='Stacking')
     ]
     plt.legend(handles=legend_elements, loc='upper right')

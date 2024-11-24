@@ -1,8 +1,4 @@
 import numpy as np
-import pandas as pd
-from sklearn.preprocessing import StandardScaler
-import matplotlib.pyplot as plt
-
 from cross_cluster_forest import (
     CrossClusterForest,
     sim_data,
@@ -63,20 +59,21 @@ def run_example():
 
     # Evaluate on test clusters
     print("\nEvaluating on test clusters...")
-    improvements, predictions = evaluate_model(
+    eval_mod = evaluate_model(
         model,
-        train_clusters,
         test_clusters,
-        ncoef=n_features
     )
+    predictions, improvements, performance = eval_mod['predictions'], eval_mod['improvements'], eval_mod['performance']
 
     # Plot and interpret results
     print("\nPlotting results...")
     plot_results(improvements)
     interpret_results(improvements)
 
-    return model, improvements, predictions
+    return model, improvements, predictions, performance
 
 
 if __name__ == "__main__":
-    model, improvements, predictions = run_example()
+    model, improvements, predictions, performance = run_example()
+    print("\nRMSE's per method")
+    print(performance)

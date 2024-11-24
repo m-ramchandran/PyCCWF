@@ -1,5 +1,5 @@
 """
-Model implementations for Cross-cluster Weighted Forests.
+Model implementations for Cross-Cluster Weighted Forests.
 """
 
 from .forest import CrossClusterForest, evaluate_model

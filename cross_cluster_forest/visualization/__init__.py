@@ -1,5 +1,5 @@
 """
-Visualization utilities for Cross-cluster Weighted Forests.
+Visualization utilities for Cross-Cluster Weighted Forests.
 """
 
 from .plots import plot_results, interpret_results

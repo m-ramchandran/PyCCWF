@@ -1,5 +1,5 @@
 """
-Data generation utilities for Cross-cluster Weighted Forests.
+Data generation utilities for Cross-Cluster Weighted Forests.
 """
 
 from .cluster_generator import AdvancedClusterGenerator

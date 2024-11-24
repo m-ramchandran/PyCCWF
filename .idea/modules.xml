@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../cross_cluster_forest/.idea/cross_cluster_forest.iml" filepath="$PROJECT_DIR$/../cross_cluster_forest/.idea/cross_cluster_forest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../PyCCWF/.idea/PyCCWF.iml" filepath="$PROJECT_DIR$/../PyCCWF/.idea/PyCCWF.iml" />
     </modules>
   </component>
 </project>

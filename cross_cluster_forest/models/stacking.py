@@ -1,11 +1,11 @@
 import numpy as np
 from scipy.optimize import nnls
-from sklearn.linear_model import Lasso, Ridge
+from sklearn.linear_model import Lasso, Ridge, LassoCV, ElasticNetCV
 
 
-def compute_stack_coefficients(X, y, method='nnls', intercept=True):
+def create_stacking_model(X, y, method='lasso', intercept=True):
     """
-    Compute stacking coefficients using different methods.
+    Fit a stacked regression model using different methods.
 
     Parameters:
     -----------
@@ -14,7 +14,7 @@ def compute_stack_coefficients(X, y, method='nnls', intercept=True):
     y : array-like
         Target values
     method : str
-        Method for computing coefficients ('nnls', 'lasso', 'ridge')
+        Method for computing coefficients ('lasso', 'ridge')
     intercept : bool
         Whether to include intercept
 
@@ -22,48 +22,43 @@ def compute_stack_coefficients(X, y, method='nnls', intercept=True):
     --------
     tuple : (coefficients, intercept)
     """
-    if method == 'nnls':
-        if intercept:
-            X_aug = np.column_stack([np.ones(len(X)), X])
-            coeffs = nnls(X_aug, y)[0]
-            return coeffs[1:], coeffs[0]
-        else:
-            coeffs = nnls(X, y)[0]
-            return coeffs, 0.0
 
-    elif method == 'lasso':
-        model = Lasso(alpha=1.0, positive=True, fit_intercept=intercept)
-        model.fit(X, y)
-        return model.coef_, model.intercept_
+    def generate_lambda_sequence(X, y, n_lambda=100, lambda_min_ratio=1e-4):
+        n, p = X.shape
+        lambda_max = np.max(np.abs(X.T @ y)) / n
+        lambda_min = lambda_min_ratio * lambda_max
+        return np.logspace(np.log10(lambda_max), np.log10(lambda_min), num=n_lambda)
+
+    if method == 'lasso':
+        model = LassoCV(
+            alphas=generate_lambda_sequence(X, y),
+            fit_intercept=intercept,
+            precompute='auto',
+            max_iter=100000,
+            tol=1e-7,
+            copy_X=True,
+            cv=10,
+            verbose=False,
+            n_jobs=None,
+            positive=True,
+            random_state=None,
+            selection='cyclic'
+            )
+        return model
 
     elif method == 'ridge':
+        # model = ElasticNetCV(
+        #     l1_ratio=[0.01],  # This makes it close to Ridge
+        #     alphas=generate_lambda_sequence(X, y, lambda_min_ratio=1e-3) * 100,
+        #     fit_intercept=intercept,
+        #     max_iter=100000,
+        #     tol=1e-7,
+        #     cv=10,
+        #     positive=True,
+        #     random_state=None
+        # )
         model = Ridge(alpha=1.0, positive=True, fit_intercept=intercept)
-        model.fit(X, y)
-        return model.coef_, model.intercept_
+        return model
 
     else:
         raise ValueError(f"Unknown method: {method}")
-
-
-def compute_stacking_predictions(test_preds, coefficients, method):
-    """
-    Compute predictions using stacking coefficients.
-
-    Parameters:
-    -----------
-    test_preds : array-like
-        Predictions from base models
-    coefficients : dict
-        Dictionary containing coefficients and intercept
-    method : str
-        Stacking method
-
-    Returns:
-    --------
-    array-like : Stacked predictions
-    """
-    coef = coefficients[method]['coef']
-    intercept = coefficients[method]['intercept']
-    return intercept + np.dot(test_preds, coef)
-
-

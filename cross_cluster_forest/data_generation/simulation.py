@@ -1,5 +1,3 @@
-# cross_cluster_forest/data_generation/simulation.py
-
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
@@ -94,7 +92,7 @@ def sim_data(nclusters, ncoef, ntest, multimodal=True, n_samples=100, clustszind
         cur_coefs = np.array([np.random.uniform(c - 0.5, c + 0.5) for c in coefs])
 
         if i < (nclusters):
-            # Training studies
+            # Training clusters
             cluster_data = train_data[train_labels == i]
             # Add outliers
             cluster_data = np.vstack([cluster_data, outliers_per_study[i]])
@@ -102,8 +100,8 @@ def sim_data(nclusters, ncoef, ntest, multimodal=True, n_samples=100, clustszind
             cluster_data = StandardScaler().fit_transform(cluster_data)
         else:
             # Test studies
-            test_idx = nclusters + i #- (nclusters - ntest)
-            cluster_data = test_data[test_labels == test_idx % 2]
+            test_idx = i - nclusters
+            cluster_data = test_data[test_labels == test_idx]
             cluster_data = StandardScaler().fit_transform(cluster_data)
 
         # Generate outcome (y)
