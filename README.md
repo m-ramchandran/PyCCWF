@@ -43,7 +43,7 @@ improvements = evaluate_model(model, train_clusters, test_clusters, ncoef=20)
 
 ### Using Your Own Data - Pre-clustered Version
 If you have multiple pre-existing clusters (e.g., multiple studies or datasets):
-
+In this case, there is the option to use k-means to create new clusters from the concatenated inputted training clusters (cluster_ind = 1), or just use the pre-existing clusters (cluster_ind = 0)
 ```python
 # Prepare your clusters
 clusters = [
@@ -73,7 +73,7 @@ predictions = model.predict(new_data, method='stack_ridge')
 ```
 
 ### Using Your Own Data - Single Dataset Version
-If you have a single dataset that you want to automatically cluster:
+If you have a single dataset that you want to fit CCWF to:
 
 ```python
 from cross_cluster_forest import SingleDatasetForest
