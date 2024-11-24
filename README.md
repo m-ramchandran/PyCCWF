@@ -122,15 +122,7 @@ The package implements four key methods:
 
 ## Visualizing Results
 
-```python
-from cross_cluster_forest import plot_results, interpret_results
-
-# Create and save visualization
-plot_results(improvements, save_path='results.png')
-
-# Print interpretation
-interpret_results(improvements)
-```
+See more comprehensive examples in the /examples folder
 
 ## Citation
 
