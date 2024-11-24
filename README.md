@@ -5,8 +5,8 @@ A Python implementation of Cross-cluster Weighted Forests for ensemble learning 
 ## Installation
 
 ```bash
-git clone https://github.com/m-ramchandran/cross-cluster-forest-python.git
-cd cross-cluster-forest
+git clone https://github.com/m-ramchandran/PyCCWF.git
+cd cross_cluster_forest
 pip install -e .
 ```
 
