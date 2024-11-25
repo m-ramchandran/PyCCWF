@@ -13,9 +13,10 @@ pip install -e .
 ## Quick Start
 
 ### Running the Example
+Currently, only regression is implemented. Classification will be included in a later release. 
 
 ```python
-from PyCCWF import CrossClusterForest, sim_data, evaluate_model
+from PyCCWF import CrossClusterForest, sim_data, evaluate_model, plot_results, interpret_results
 
 # Generate example data
 data = sim_data(nclusters=15, ncoef=20, ntest=5,
@@ -39,7 +40,21 @@ model = CrossClusterForest(
 model.fit(train_clusters, ncoef=20)
 
 # Evaluate
-eval_mod = evaluate_model(model, train_clusters, test_clusters, ncoef=20)
+eval_mod = evaluate_model(model, test_clusters)
+predictions, improvements, performance = eval_mod['predictions'], eval_mod['improvements'], eval_mod['performance']
+# Dataframe of predictions across all test clusters (concatenated):
+print(predictions)
+#Average percent change in RMSE from baseline Random Forest across all test clusters, for each weighting method
+print(improvements)
+#Dataframe of average RMSEs per method (column) per test cluster (rows)
+print(performance)
+
+#plot improvements:
+plot_results(improvements)
+
+#interpret results
+interpret_results(improvements)
+
 ```
 
 ### Using Your Own Data - Pre-clustered Version
@@ -122,7 +137,7 @@ The package implements four key methods:
 - `outcome_col`: Name of target variable column
 - `k`: Number of clusters for k-means
 
-## Visualizing Results
+## More examples
 
 See more comprehensive examples in the /examples folder
 
