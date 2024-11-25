@@ -1,6 +1,7 @@
 # Cross-Cluster Weighted Forests
 
-A Python implementation of Cross-cluster Weighted Forests for ensemble learning across multiple data clusters.
+A Python implementation of the Cross-Cluster Weighted Forests method for ensemble learning across multiple clusters or datasets. Full details can be found here: https://arxiv.org/abs/2105.07610 
+
 
 ## Installation
 ```bash
@@ -140,9 +141,9 @@ The package implements four key methods:
 - `outcome_col`: Name of target variable column
 - `k`: Number of clusters for k-means
 
-## More examples
+## Additional functionality
 
-See more comprehensive examples in the /examples folder
+See more comprehensive examples at https://github.com/m-ramchandran/PyCCWF/tree/main/examples
 
 ## Citation
 
