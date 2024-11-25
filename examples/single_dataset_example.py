@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from cross_cluster_forest import (
+from PyCCWF import (
     SingleDatasetForest,
     plot_results,
     interpret_results

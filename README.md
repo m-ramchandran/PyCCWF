@@ -6,7 +6,7 @@ A Python implementation of Cross-cluster Weighted Forests for ensemble learning 
 
 ```bash
 git clone https://github.com/m-ramchandran/PyCCWF.git
-cd cross_cluster_forest
+cd PyCCWF
 pip install -e .
 ```
 
@@ -15,7 +15,7 @@ pip install -e .
 ### Running the Example
 
 ```python
-from cross_cluster_forest import CrossClusterForest, sim_data, evaluate_model
+from PyCCWF import CrossClusterForest, sim_data, evaluate_model
 
 # Generate example data
 data = sim_data(nclusters=15, ncoef=20, ntest=5,
@@ -78,7 +78,7 @@ predictions = model.predict(new_data, method='stack_ridge')
 If you have a single dataset that you want to fit CCWF to:
 
 ```python
-from cross_cluster_forest import SingleDatasetForest
+from PyCCWF import SingleDatasetForest
 
 # Initialize
 model = SingleDatasetForest(

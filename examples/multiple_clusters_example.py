@@ -1,5 +1,5 @@
 import numpy as np
-from cross_cluster_forest import (
+from PyCCWF import (
     CrossClusterForest,
     sim_data,
     plot_results,
