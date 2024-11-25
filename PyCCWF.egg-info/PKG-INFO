@@ -4,6 +4,7 @@ Version: 0.1.0
 Summary: Implementation of Cross-cluster Weighted Forests
 Author: Maya Ramchandran
 Requires-Python: >=3.7
+License-File: LICENSE
 Requires-Dist: numpy
 Requires-Dist: pandas
 Requires-Dist: scikit-learn
